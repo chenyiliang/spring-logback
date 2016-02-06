@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+	<bean class="ch.qos.logback.ext.spring.ApplicationContextHolder" />
+
+	<bean id="DBAppender" class="ch.qos.logback.classic.db.DBAppender"
+		init-method="start" destroy-method="stop">
+		<property name="context"
+			value="#{ T(org.slf4j.LoggerFactory).getILoggerFactory() }" />
+		<property name="connectionSource">
+			<bean class="ch.qos.logback.core.db.DataSourceConnectionSource"
+				init-method="start" destroy-method="stop">
+				<property name="context"
+					value="#{ T(org.slf4j.LoggerFactory).getILoggerFactory() }" />
+				<property name="dataSource" ref="dataSource" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/logback" />
+		<property name="username" value="root" />
+		<property name="password" value="1991105" />
+	</bean>
+</beans>
