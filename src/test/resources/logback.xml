@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<appender name="DBAppender"
+	<appender name="dbAppender"
 		class="ch.qos.logback.ext.spring.DelegatingLogbackAppender" />
-	<root level="DEBUG">
-		<appender-ref ref="DBAppender" />
+	<appender name="consoleAppender"
+		class="ch.qos.logback.ext.spring.DelegatingLogbackAppender" />
+	<root level="INFO">
+		<appender-ref ref="dbAppender" />
+		<appender-ref ref="consoleAppender" />
 	</root>
 </configuration>

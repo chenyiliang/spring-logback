@@ -12,15 +12,27 @@
 
 	<bean class="ch.qos.logback.ext.spring.ApplicationContextHolder" />
 
-	<bean id="DBAppender" class="ch.qos.logback.classic.db.DBAppender"
+	<bean id="context" class="org.slf4j.LoggerFactory" factory-method="getILoggerFactory" />
+
+	<bean id="consoleAppender" class="ch.qos.logback.core.ConsoleAppender"
 		init-method="start" destroy-method="stop">
-		<property name="context"
-			value="#{ T(org.slf4j.LoggerFactory).getILoggerFactory() }" />
+		<property name="context" ref="context" />
+		<property name="encoder">
+			<bean class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"
+				init-method="start" destroy-method="stop">
+				<property name="context" ref="context" />
+				<property name="pattern" value="%date %-5level [%thread] %logger{36} %m%n" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="dbAppender" class="ch.qos.logback.classic.db.DBAppender"
+		init-method="start" destroy-method="stop">
+		<property name="context" ref="context" />
 		<property name="connectionSource">
 			<bean class="ch.qos.logback.core.db.DataSourceConnectionSource"
 				init-method="start" destroy-method="stop">
-				<property name="context"
-					value="#{ T(org.slf4j.LoggerFactory).getILoggerFactory() }" />
+				<property name="context" ref="context" />
 				<property name="dataSource" ref="dataSource" />
 			</bean>
 		</property>
